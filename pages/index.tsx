@@ -15,7 +15,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>Let's build a lottery dApp from Docker!!</h1>
+      <h1>Let's build a lottery dApp from Docker!!!</h1>
     </div>
   );
 };
