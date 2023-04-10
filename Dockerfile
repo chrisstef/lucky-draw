@@ -2,12 +2,13 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY . /app
 
+COPY package.json package-lock.json ./
 RUN npm install
 
-COPY pages ./pages
-COPY public ./public
-COPY styles ./styles
+COPY next.config.js ./next.config.js
+
+EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
