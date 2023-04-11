@@ -5,6 +5,7 @@ WORKDIR /app
 COPY . /app
 
 COPY package.json package-lock.json ./
+
 RUN npm install
 
 COPY next.config.js ./next.config.js
