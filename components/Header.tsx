@@ -4,7 +4,7 @@ import NavButton from './NavButton'
 
 function Header() {
     return (
-        <header className='grid grid-cols-2 md:grid-cols-5 justify-between items-center'>
+        <header className='grid grid-cols-2 md:grid-cols-5 justify-between items-center p-5'>
             <div className='flex items-center space-x-2'>
                 <img
                     src='https://avatars.githubusercontent.com/u/63172663?v=4'
@@ -12,7 +12,7 @@ function Header() {
                     className='rounded-full h-20 w-20 border border-emerald-500'
                 />
                 <div>
-                    <h1 className='text-lg text-white font-bold'>Lucky Draw🎲</h1>
+                    <h1 className='text-lg text-white font-bold'>Lucky Draw</h1>
                     <p className='text-xs text-emerald-500 truncate'>User...</p>
                 </div>
             </div>
