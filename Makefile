@@ -17,7 +17,7 @@ build-dev: ## Makes the static files for the lucky-draw and adds them to the bac
 
 .PHONY: run-dev
 run-dev: clean-dev build-dev  ## Cleans, builds and runs the software on the DEVELOPMENT environment 
-	@docker-compose -p ${DAPP_CONTAINER} up --build -d
+	@docker-compose -p ${DAPP_CONTAINER} up -d
 
 .PHONY: recreate-dev
 recreate-dev: clean-dev  ## Cleans & recreates everything on the DEVELOPMENT environment 
@@ -30,11 +30,6 @@ clean-dev: ## Cleans the software from the DEVELOPMENT environment
 .PHONY: logs-dev
 logs-dev: ## Shows the logs of the DEVELOPMENT environment; CTRL+C to exit
 	@docker-compose -p ${DAPP_CONTAINER} logs -f
-
-.PHONY: clean-dev
-clean-sso-dev: ## Cleans the software from the DEVELOPMENT environment 
-	@docker stop ${DAPP_CONTAINER} || true
-	@docker rm ${DAPP_CONTAINER} || true
 
 .PHONY: purge
 purge: ## WARNING! Use this with care. It will stop and remove all containers, volumes, networks, etc

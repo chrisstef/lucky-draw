@@ -11,7 +11,7 @@ COPY . /app
 COPY package.json package-lock.json ./
 
 # Install dependencies using npm
-RUN npm install
+RUN yarn
 
 # Copy the next.config.js file from the current directory to the /app directory in the container
 COPY next.config.js ./next.config.js
@@ -20,4 +20,4 @@ COPY next.config.js ./next.config.js
 EXPOSE 3000
 
 # Start the development server using npm when the container is run
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
