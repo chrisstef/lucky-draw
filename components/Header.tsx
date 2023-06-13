@@ -12,8 +12,8 @@ function Header() {
                     className='rounded-full h-20 w-20 border border-emerald-500'
                 />
                 <div>
-                    <h1 className='text-lg text-white font-bold'>Lucky Draw</h1>
-                    <p className='text-xs text-emerald-500 truncate'>User...</p>
+                    <h1 className='text-lg text-white font-bold font-poppins'>Lucky Draw</h1>
+                    <p className='text-xs font-poppins text-emerald-500 truncate'>User...</p>
                 </div>
             </div>
 
