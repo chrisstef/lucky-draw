@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy all files from the current directory to the /app directory in the container
 COPY . /app
 
-# Copy the package.json and package-lock.json files from the current directory to the /app directory in the container
-COPY package.json package-lock.json ./
+# Copy the package.json file from the current directory to the /app directory in the container
+COPY package.json ./
 
 # Install dependencies using npm
 RUN yarn
