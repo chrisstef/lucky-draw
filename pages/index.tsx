@@ -2,12 +2,15 @@ import Head from "next/head";
 import { NextPage } from "next";
 import Header from "@/components/Header";
 import Login from "@/components/Login";
+import Loader from "@/components/Loader";
 
 import { useContract, useMetamask, useAddress } from "@thirdweb-dev/react";
 
 const Home: NextPage = () => {
     const address = useAddress();
+    const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS)
 
+    if (isLoading) return <Loader />;
     if (!address) return <Login />;
 
     return (
