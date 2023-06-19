@@ -14,3 +14,14 @@
     #c81cc5 100%
   );
 }
+
+@layer components {
+
+    .stats {
+        @apply bg-[#091F1C] text-white font-poppins p-4 flex-1 rounded-md border-2 border-[#004337]
+    }
+
+    .stats-container {
+        @apply bg-[#091F1C] p-5 rounded-lg border-[#004337] border flex-1
+    }
+}
