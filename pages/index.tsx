@@ -1,16 +1,26 @@
 import { useState } from "react";
 import Head from "next/head";
 import { NextPage } from "next";
+import { ethers } from "ethers";
+import { useContract, useMetamask, useAddress, useContractRead } from "@thirdweb-dev/react";
 import Header from "@/components/Header";
 import Login from "@/components/Login";
 import Loader from "@/components/Loader";
+import { currency } from "constants";
 
-import { useContract, useMetamask, useAddress } from "@thirdweb-dev/react";
 
 const Home: NextPage = () => {
     const address = useAddress();
     const [quantity, setQuantity] = useState<number>(1);
     const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS)
+
+    const { data: RemainingTickets } = useContractRead(contract, "RemainingTickets")
+
+    const { data: CurrentWinningReward } = useContractRead(contract, "CurrentWinningReward")
+
+    const { data: ticketPrice } = useContractRead(contract, "ticketPrice")
+
+    const { data: ticketCommission } = useContractRead(contract, "ticketCommission")
 
     if (isLoading) return <Loader />;
 
@@ -36,11 +46,11 @@ const Home: NextPage = () => {
                         <div className="flex justify-between p-2 space-x-2">
                             <div className="stats">
                                 <h2 className="text-sm">Total Pool</h2>
-                                <p className="text-xl">0.2 ETH</p>
+                                <p className="text-xl">{CurrentWinningReward && ethers.utils.formatEther(CurrentWinningReward.toString())}{" "} {currency}</p>
                             </div>
                             <div className="stats">
                                 <h2 className="text-sm">Tickets Remaining</h2>
-                                <p className="text-xl">100</p>
+                                <p className="text-xl">{RemainingTickets?.toNumber()}</p>
                             </div>
                         </div>
 
@@ -52,7 +62,7 @@ const Home: NextPage = () => {
                         <div className="stats-container">
                             <div className="flex justify-between items-center text-white font-poppins pb-2">
                                 <h2>Price per ticket</h2>
-                                <p>0.02 ETH</p>
+                                <p>{ticketPrice && ethers.utils.formatEther(ticketPrice.toString())}{" "} {currency}</p>
                             </div>
                             <div className="flex text-white font-poppins items-center space-x-2 rounded-sm bg-[#091B18] border-[#004337] border p-4">
                                 <p>Tickets</p>
@@ -71,18 +81,16 @@ const Home: NextPage = () => {
                                     <p>
                                         Total cost of tickets
                                     </p>
-                                    <p>
-                                        0.999 ETH
-                                    </p>
+                                    <p>{ticketPrice && Number(ethers.utils.formatEther(ticketPrice.toString())) * quantity}{" "} {currency}</p>
+
                                 </div>
 
                                 <div className="flex items-center justify-between text-emerald-300 text-xs italic font-poppins">
                                     <p>
                                         Service fees
                                     </p>
-                                    <p>
-                                        0,001 ETH
-                                    </p>
+                                    <p>{ticketCommission && ethers.utils.formatEther(ticketCommission.toString())}{" "} {currency}</p>
+
                                 </div>
 
                                 <div className="flex items-center justify-between text-emerald-300 text-xs italic font-poppins">
