@@ -7,12 +7,15 @@ import Header from "@/components/Header";
 import Login from "@/components/Login";
 import Loader from "@/components/Loader";
 import { currency } from "constants";
+import CountdownTimer from "@/components/CountdownTimer";
 
 
 const Home: NextPage = () => {
     const address = useAddress();
     const [quantity, setQuantity] = useState<number>(1);
     const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS)
+
+    const { data: expiration } = useContractRead(contract, "expiration")
 
     const { data: RemainingTickets } = useContractRead(contract, "RemainingTickets")
 
@@ -55,6 +58,9 @@ const Home: NextPage = () => {
                         </div>
 
                         {/* Countdown timer */}
+                        <div className="mt-5 mb-3">
+                            <CountdownTimer />
+                        </div>
                     </div>
 
                     {/* The price per ticket box */}
@@ -104,7 +110,7 @@ const Home: NextPage = () => {
                             </div>
 
 
-                            <button className="mt-5 w-full bg-gradient-to-br from-orange-500 to-emerald-600 px-10 py-5 rounded-md text-white font-poppins shadow-xl disabled:from-gray-600 disabled:text-gray-100 disabled:to-gray-600 disabled:cursor-not-allowed">
+                            <button disabled={expiration?.toString() < Date.now().toString() || RemainingTickets?.toNumber() === 0} className="mt-5 w-full bg-gradient-to-br from-orange-500 to-emerald-600 px-10 py-5 rounded-md text-white font-poppins shadow-xl disabled:from-gray-600 disabled:text-gray-100 disabled:to-gray-600 disabled:cursor-not-allowed">
                                 Buy Tickets
                             </button>
                         </div>
