@@ -16,7 +16,7 @@ function CountdownTimer() {
     const { data: expiration, isLoading: isLoadingExpiration } = useContractRead(contract, "expiration")
 
     const renderer = ({ hours, minutes, seconds, completed }: Props) => {
-        if (!completed) {
+        if (completed) {
 
             return (
                 <div>

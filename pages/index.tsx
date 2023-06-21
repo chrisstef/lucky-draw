@@ -2,12 +2,13 @@ import { useState } from "react";
 import Head from "next/head";
 import { NextPage } from "next";
 import { ethers } from "ethers";
-import { useContract, useMetamask, useAddress, useContractRead } from "@thirdweb-dev/react";
+import { useContract, useAddress, useContractRead, useContractWrite } from "@thirdweb-dev/react";
+import toast from "react-hot-toast";
 import Header from "@/components/Header";
 import Login from "@/components/Login";
 import Loader from "@/components/Loader";
-import { currency } from "constants";
 import CountdownTimer from "@/components/CountdownTimer";
+import currency from "constants";
 
 
 const Home: NextPage = () => {
@@ -17,13 +18,44 @@ const Home: NextPage = () => {
 
     const { data: expiration } = useContractRead(contract, "expiration")
 
-    const { data: RemainingTickets } = useContractRead(contract, "RemainingTickets")
+    const { data: remainingTickets } = useContractRead(contract, "RemainingTickets")
 
-    const { data: CurrentWinningReward } = useContractRead(contract, "CurrentWinningReward")
+    const { data: currentWinningReward } = useContractRead(contract, "CurrentWinningReward")
 
     const { data: ticketPrice } = useContractRead(contract, "ticketPrice")
 
     const { data: ticketCommission } = useContractRead(contract, "ticketCommission")
+
+    const { mutateAsync: BuyTickets } = useContractWrite(contract, "BuyTickets");
+
+    const handleClick = async () => {
+        if (!ticketPrice) return;
+
+        const notification = toast.loading("Purchasing tickets...");
+
+        try {
+            const data = await BuyTickets(
+                [
+                    {
+                        value: ethers.utils.parseEther(
+                            (
+                                Number(ethers.utils.formatEther(ticketPrice)) * quantity).toString()
+                        ),
+                    },
+                ]
+            );
+
+            toast.success(`Successfully purchased ${quantity} tickets.`, {
+                id: notification,
+            });
+            console.log("Contract call success!", data);
+        } catch (err) {
+            toast.error("Whoops, something went wrong!", {
+                id: notification,
+            });
+            console.log("Contract call failure!", err);
+        }
+    };
 
     if (isLoading) return <Loader />;
 
@@ -49,11 +81,11 @@ const Home: NextPage = () => {
                         <div className="flex justify-between p-2 space-x-2">
                             <div className="stats">
                                 <h2 className="text-sm">Total Pool</h2>
-                                <p className="text-xl">{CurrentWinningReward && ethers.utils.formatEther(CurrentWinningReward.toString())}{" "} {currency}</p>
+                                <p className="text-xl">{currentWinningReward && ethers.utils.formatEther(currentWinningReward.toString())}{" "} {currency}</p>
                             </div>
                             <div className="stats">
                                 <h2 className="text-sm">Tickets Remaining</h2>
-                                <p className="text-xl">{RemainingTickets?.toNumber()}</p>
+                                <p className="text-xl">{remainingTickets?.toNumber()}</p>
                             </div>
                         </div>
 
@@ -110,15 +142,24 @@ const Home: NextPage = () => {
                             </div>
 
 
-                            <button disabled={expiration?.toString() < Date.now().toString() || RemainingTickets?.toNumber() === 0} className="mt-5 w-full bg-gradient-to-br from-orange-500 to-emerald-600 px-10 py-5 rounded-md text-white font-poppins shadow-xl disabled:from-gray-600 disabled:text-gray-100 disabled:to-gray-600 disabled:cursor-not-allowed">
-                                Buy Tickets
+                            <button
+                                disabled={
+                                    expiration?.toString() < Date.now().toString() ||
+                                    remainingTickets?.toNumber() === 0
+                                }
+                                onClick={handleClick}
+                                className='mt-5 w-full bg-gradient-to-br from-orange-500 to-emerald-600 px-10 py-5 
+              rounded-md text-white shadow-xl font-poppins disabled:from-gray-600 disabled:text-gray-100 disabled:to-gray-600
+              disabled:cursor-not-allowed'>
+                                Buy {quantity} ticket(s) for {ticketPrice &&
+                                    Number(ethers.utils.formatEther(ticketPrice.toString())) * quantity}
+                                {' '}
+                                {currency}
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div></div>
         </div>
     );
 };
