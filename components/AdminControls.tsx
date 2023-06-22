@@ -112,8 +112,8 @@ function AdminControls() {
 
     return (
         <div className='text-white text-center stats-container rounded-md border-emerald-300/20 border'>
-            <h2 className='font-bold'>Admin Controls</h2>
-            <p className='mb-5'>Total Commission to be withdrawn:{" "}
+            <h2 className='font-bold font-poppins'>Admin Controls</h2>
+            <p className='mb-5 font-poppins'>Total Commission to be withdrawn:{" "}
                 {totalCommission && ethers.utils.formatEther(totalCommission?.toString())}
                 {" "}{currency}</p>
             <div className='flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2'>
