@@ -34,6 +34,8 @@ const Home: NextPage = () => {
 
     const { data: winnings } = useContractRead(contract, "getWinningsForAddress", [address]);
 
+    const { mutateAsync: WithdrawWinnings } = useContractWrite(contract, "WithdrawWinnings");
+
 
     useEffect(() => {
         if (!tickets) return;
@@ -72,6 +74,29 @@ const Home: NextPage = () => {
         }
     };
 
+    const onWithdrawWinnings = async () => {
+        const notification = toast.loading('Withdrawing your winnings...');
+
+        try {
+            const data = await WithdrawWinnings([{}]);
+
+            toast.success("Winnings Withdrawn Successfully!", {
+                id: notification,
+            });
+
+            console.info("Contract call success:", data);
+
+        }
+
+        catch (err) {
+            toast.error("Whoops, something went wrong!", {
+                id: notification,
+            });
+
+            console.error('Contract call failure', err);
+        }
+    };
+
     if (isLoading) return <Loader />;
 
     if (!address) return <Login />;
@@ -90,9 +115,10 @@ const Home: NextPage = () => {
 
                 {winnings > 0 && (
                     <div className='max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-5'>
-                        <button className='p-5 bg-gradient-to-b from-orange-500 to-emerald-600 animate-pulse text-center rounded-xl w-full'>
+                        <button onClick={onWithdrawWinnings} className='p-5 bg-gradient-to-b from-orange-500 to-emerald-600 animate-pulse text-center rounded-xl w-full'>
                             <p className='font-bold font-poppins'>Winner Winner Chicken Dinner!</p>
-                            <p className="font-poppins">Total Winnings: {ethers.utils.formatEther(winnings.toString())}{" "}{currency}
+                            <p className="font-poppins">Total Winnings: {ethers.utils.formatEther(winnings.toString())}{" "}
+                                {currency}
 
                             </p>
                             <br />
