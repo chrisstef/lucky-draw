@@ -13,23 +13,29 @@ import currency from "constants";
 
 const Home: NextPage = () => {
     const address = useAddress();
-    const [userTickets, setUserTickets] = useState(0);
     const [quantity, setQuantity] = useState<number>(1);
-    const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS)
+    const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS);
+    const [userTickets, setUserTickets] = useState(0);
 
-    const { data: expiration } = useContractRead(contract, "expiration")
 
-    const { data: remainingTickets } = useContractRead(contract, "RemainingTickets")
+    const { data: expiration } = useContractRead(contract, "expiration");
 
-    const { data: currentWinningReward } = useContractRead(contract, "CurrentWinningReward")
+    const { data: remainingTickets } = useContractRead(contract, "RemainingTickets");
 
-    const { data: ticketPrice } = useContractRead(contract, "ticketPrice")
+    const { data: currentWinningReward } = useContractRead(contract, "CurrentWinningReward");
 
-    const { data: ticketCommission } = useContractRead(contract, "ticketCommission")
+    const { data: ticketPrice } = useContractRead(contract, "ticketPrice");
 
-    const { data: tickets } = useContractRead(contract, "getTickets")
+    const { data: ticketCommission } = useContractRead(contract, "ticketCommission");
 
     const { mutateAsync: BuyTickets } = useContractWrite(contract, "BuyTickets");
+
+    const { data: tickets } = useContractRead(contract, "getTickets");
+
+    const { data: winnings } = useContractRead(contract, "getWinningsForAddress", [address]);
+
+    const { mutateAsync: WithdrawWinnings } = useContractWrite(contract, "WithdrawWinnings");
+
 
     useEffect(() => {
         if (!tickets) return;
@@ -68,7 +74,28 @@ const Home: NextPage = () => {
         }
     };
 
+    const onWithdrawWinnings = async () => {
+        const notification = toast.loading('Withdrawing your winnings...');
 
+        try {
+            const data = await WithdrawWinnings([{}]);
+
+            toast.success("Winnings Withdrawn Successfully!", {
+                id: notification,
+            });
+
+            console.info("Contract call success:", data);
+
+        }
+
+        catch (err) {
+            toast.error("Whoops, something went wrong!", {
+                id: notification,
+            });
+
+            console.error('Contract call failure', err);
+        }
+    };
 
     if (isLoading) return <Loader />;
 
@@ -85,6 +112,20 @@ const Home: NextPage = () => {
 
             <div className="flex-1">
                 <Header />
+
+                {winnings > 0 && (
+                    <div className='max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-5'>
+                        <button onClick={onWithdrawWinnings} className='p-5 bg-gradient-to-b from-orange-500 to-emerald-600 animate-pulse text-center rounded-xl w-full'>
+                            <p className='font-bold font-poppins'>Winner Winner Chicken Dinner!</p>
+                            <p className="font-poppins">Total Winnings: {ethers.utils.formatEther(winnings.toString())}{" "}
+                                {currency}
+
+                            </p>
+                            <br />
+                            <p className='font-semibold font-poppins'>Click here to withdraw</p>
+                        </button>
+                    </div>
+                )}
                 {/* The next draw box */}
                 <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5">
                     <div className="stats-container">
