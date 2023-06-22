@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { ethers } from "ethers";
 import { useContract, useAddress, useContractRead, useContractWrite } from "@thirdweb-dev/react";
 import toast from "react-hot-toast";
+import Marquee from 'react-fast-marquee';
 import Header from "@/components/Header";
 import Login from "@/components/Login";
 import Loader from "@/components/Loader";
@@ -35,6 +36,10 @@ const Home: NextPage = () => {
     const { data: winnings } = useContractRead(contract, "getWinningsForAddress", [address]);
 
     const { mutateAsync: WithdrawWinnings } = useContractWrite(contract, "WithdrawWinnings");
+
+    const { data: lastWinner } = useContractRead(contract, "lastWinner");
+
+    const { data: lastWinnerAmount } = useContractRead(contract, "lastWinnerAmount");
 
 
     useEffect(() => {
@@ -113,13 +118,18 @@ const Home: NextPage = () => {
             <div className="flex-1">
                 <Header />
 
+                <Marquee className='bg-[#0A1F1C] p-5 mb-5' gradient={false} speed={62}>
+                    <div className='flex space-x-2 mx-10'>
+                        <h4 className='text-white font-bold font-poppins'>Last Winner: {lastWinner?.toString()}</h4>
+                        <h4 className='text-white font-bold font-poppins'>Previous Winnings: {lastWinnerAmount && ethers.utils.formatEther(lastWinnerAmount?.toString())}{" "}{currency}{" "}</h4>
+                    </div>
+                </Marquee>
+
                 {winnings > 0 && (
                     <div className='max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mt-5'>
                         <button onClick={onWithdrawWinnings} className='p-5 bg-gradient-to-b from-orange-500 to-emerald-600 animate-pulse text-center rounded-xl w-full'>
                             <p className='font-bold font-poppins'>Winner Winner Chicken Dinner!</p>
-                            <p className="font-poppins">Total Winnings: {ethers.utils.formatEther(winnings.toString())}{" "}
-                                {currency}
-
+                            <p className="font-poppins">Total Winnings: {winnings && ethers.utils.formatEther(winnings.toString())}{" "}{currency}{" "}
                             </p>
                             <br />
                             <p className='font-semibold font-poppins'>Click here to withdraw</p>
