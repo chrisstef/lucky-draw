@@ -32,4 +32,12 @@
     .countdown-label {
         @apply pt-4 text-center text-white font-poppins uppercase text-sm
     }
+
+    .admin-button {
+        @apply bg-[#091F1C] p-2 flex-1 font-poppins rounded-md border-[#004337] border-2 hover:bg-emerald-500/50
+    }
+
+    .admin-icon {
+        @apply h-6 mx-auto mb-2
+    }
 }
