@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Login from "@/components/Login";
 import Loader from "@/components/Loader";
 import CountdownTimer from "@/components/CountdownTimer";
+import AdminControls from "@/components/AdminControls";
 import currency from "constants";
 
 
@@ -40,6 +41,8 @@ const Home: NextPage = () => {
     const { data: lastWinner } = useContractRead(contract, "lastWinner");
 
     const { data: lastWinnerAmount } = useContractRead(contract, "lastWinnerAmount");
+
+    const { data: isLotteryOperator } = useContractRead(contract, "lotteryOperator");
 
 
     useEffect(() => {
@@ -240,7 +243,17 @@ const Home: NextPage = () => {
                             </div>
                         )}
                     </div>
+
                 </div>
+                <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5">
+                    {isLotteryOperator === address && (
+                        <div className='flex justify-center mb-10'>
+                            <AdminControls />
+                        </div>
+                    )}
+                </div>
+
+
             </div>
         </div>
     );
