@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import { NextPage } from "next";
 import { ethers } from "ethers";
@@ -13,6 +13,7 @@ import currency from "constants";
 
 const Home: NextPage = () => {
     const address = useAddress();
+    const [userTickets, setUserTickets] = useState(0);
     const [quantity, setQuantity] = useState<number>(1);
     const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS)
 
@@ -26,36 +27,48 @@ const Home: NextPage = () => {
 
     const { data: ticketCommission } = useContractRead(contract, "ticketCommission")
 
+    const { data: tickets } = useContractRead(contract, "getTickets")
+
     const { mutateAsync: BuyTickets } = useContractWrite(contract, "BuyTickets");
+
+    useEffect(() => {
+        if (!tickets) return;
+
+        const totalTickets: string[] = tickets;
+        const noOfUserTickets = totalTickets.reduce(
+            (total, ticketAddress) => (ticketAddress === address ? total + 1 : total),
+            0
+        );
+        setUserTickets(noOfUserTickets);
+    }, [tickets, address])
 
     const handleClick = async () => {
         if (!ticketPrice) return;
 
         const notification = toast.loading("Purchasing tickets...");
-
         try {
-            const data = await BuyTickets(
-                [
-                    {
-                        value: ethers.utils.parseEther(
-                            (
-                                Number(ethers.utils.formatEther(ticketPrice)) * quantity).toString()
-                        ),
-                    },
-                ]
-            );
+            const totalPrice = Number(ethers.utils.formatEther(ticketPrice.toString())) * quantity;
+            console.log("Total Price:", totalPrice);
+
+            const parsedTotalPrice = ethers.utils.parseEther(totalPrice.toString());
+            console.log("Parsed Total Price:", parsedTotalPrice.toString());
+
+            const data = await BuyTickets([parsedTotalPrice]);
 
             toast.success(`Successfully purchased ${quantity} tickets.`, {
                 id: notification,
             });
-            console.log("Contract call success!", data);
+
+            console.info("Contract call success:", data);
         } catch (err) {
             toast.error("Whoops, something went wrong!", {
                 id: notification,
             });
-            console.log("Contract call failure!", err);
+            console.error("Contract call failure:", err);
         }
     };
+
+
 
     if (isLoading) return <Loader />;
 
@@ -149,14 +162,32 @@ const Home: NextPage = () => {
                                 }
                                 onClick={handleClick}
                                 className='mt-5 w-full bg-gradient-to-br from-orange-500 to-emerald-600 px-10 py-5 
-              rounded-md text-white shadow-xl font-poppins disabled:from-gray-600 disabled:text-gray-100 disabled:to-gray-600
-              disabled:cursor-not-allowed'>
+                                        rounded-md text-white shadow-xl font-poppins disabled:from-gray-600
+                                         disabled:text-gray-100 disabled:to-gray-600 disabled:cursor-not-allowed'
+                            >
                                 Buy {quantity} ticket(s) for {ticketPrice &&
                                     Number(ethers.utils.formatEther(ticketPrice.toString())) * quantity}
                                 {' '}
                                 {currency}
                             </button>
                         </div>
+                        {userTickets > 0 && (
+                            <div className="stats">
+                                <p className='text-lg mb-2 font-poppins'>
+                                    You have {userTickets} Tickets in this draw
+                                </p>
+                                <div className='flex max-w-sm flex-wrap gap-x-2 gap-y-2'>
+                                    {Array(userTickets)
+                                        .fill("")
+                                        .map((_, index) => (
+                                            <p
+                                                className='text-emerald-300 font-poppins h-20 w-12 bg-emerald-500/30 rounded-lg flex flex-shrink-0 items-center justify-center text-xs italic'
+                                                key={index}
+                                            >{index + 1}</p>
+                                        ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
