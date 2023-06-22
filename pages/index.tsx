@@ -255,6 +255,21 @@ const Home: NextPage = () => {
 
 
             </div>
+            <footer className='border-t border-emerald-500/20 flex items-center text-white justify-center p-5'>
+                <img
+                    className='h-10 w-10 filter hue-rotate-90 opacity-40 rounded-full border border-emerald-500 shadow-xl'
+                    src='https://avatars.githubusercontent.com/u/63172663?v=4'
+                    alt='logo'
+                />
+
+                <p className='text-xs text-emerald-900 pl-5 font-poppins'>
+                    <span className="font-bold">DISCLAIMER:</span> If you are gambling online utilizing this app, you are doing
+                    so completely and totally at your own risk. We are not liable for any
+                    losses that are incurred or problems that arise at online casinos or
+                    elsewhere.
+                </p>
+
+            </footer>
         </div>
     );
 };

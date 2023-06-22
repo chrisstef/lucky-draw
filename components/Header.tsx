@@ -9,11 +9,11 @@ function Header() {
 
     return (
         <header className='grid grid-cols-2 md:grid-cols-5 justify-between items-center p-5'>
-            <div className='flex items-center space-x-2'>
+            <div className='flex items-center space-x-3'>
                 <img
                     src='https://avatars.githubusercontent.com/u/63172663?v=4'
                     alt='logo'
-                    className='rounded-full h-20 w-20 border border-emerald-500'
+                    className='rounded-full h-20 w-20 border border-emerald-500 shadow-xl'
                 />
                 <div>
                     <h1 className='text-lg text-white font-bold font-poppins'>Lucky Draw</h1>
