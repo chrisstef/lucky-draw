@@ -120,25 +120,25 @@ function AdminControls() {
                 <button
                     onClick={drawWinner}
                     className='admin-button'>
-                    <StarIcon className='h-6 mx-auto mb-2' />
+                    <StarIcon className='admin-icon' />
                     Draw Winner
                 </button>
                 <button
                     onClick={onWithdrawCommission}
                     className='admin-button'>
-                    <CurrencyDollarIcon className='h-6 mx-auto mb-2' />
+                    <CurrencyDollarIcon className='admin-icon' />
                     Withdraw Commission
                 </button>
                 <button
                     onClick={onRestartDraw}
                     className='admin-button'>
-                    <ArrowPathIcon className='h-6 mx-auto mb-2' />
+                    <ArrowPathIcon className='admin-icon' />
                     Restart Draw
                 </button>
                 <button
                     onClick={onRefundAll}
                     className='admin-button'>
-                    <ArrowUturnDownIcon className='h-6 mx-auto mb-2' />
+                    <ArrowUturnDownIcon className='admin-icon' />
                     Refund All
                 </button>
             </div>
