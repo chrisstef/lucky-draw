@@ -67,7 +67,7 @@ const Home: NextPage = () => {
             const parsedTotalPrice = ethers.utils.parseEther(totalPrice.toString());
             console.log("Parsed Total Price:", parsedTotalPrice.toString());
 
-            const data = await BuyTickets([parsedTotalPrice]);
+            const data = await BuyTickets({ overrides: { value: ethers.utils.parseEther((Number(ethers.utils.formatEther(ticketPrice)) * quantity).toString()) } });
 
             toast.success(`Successfully purchased ${quantity} tickets.`, {
                 id: notification,
