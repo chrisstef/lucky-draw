@@ -86,6 +86,7 @@ const Home: NextPage = () => {
         const notification = toast.loading('Withdrawing your winnings...');
 
         try {
+            //@ts-ignore
             const data = await WithdrawWinnings([{}]);
 
             toast.success("Winnings Withdrawn Successfully!", {
@@ -208,7 +209,6 @@ const Home: NextPage = () => {
                                 </div>
                             </div>
 
-
                             <button
                                 disabled={
                                     expiration?.toString() < Date.now().toString() ||
@@ -243,7 +243,6 @@ const Home: NextPage = () => {
                             </div>
                         )}
                     </div>
-
                 </div>
                 <div className="space-y-5 md:space-y-0 m-5 md:flex md:flex-row items-start justify-center md:space-x-5">
                     {isLotteryOperator === address && (
@@ -252,9 +251,8 @@ const Home: NextPage = () => {
                         </div>
                     )}
                 </div>
-
-
             </div>
+
             <footer className='border-t border-emerald-500/20 flex items-center text-white justify-center p-5'>
                 <img
                     className='h-10 w-10 filter hue-rotate-90 opacity-40 rounded-full border border-emerald-500 shadow-xl'

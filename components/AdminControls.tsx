@@ -24,6 +24,7 @@ function AdminControls() {
         const notification = toast.loading("Picking a Lucky Winner...");
 
         try {
+            //@ts-ignore
             const data = await DrawWinnerTicket([{}]);
 
             toast.success("Winner Picked!", {
@@ -43,31 +44,28 @@ function AdminControls() {
 
 
     const onWithdrawCommission = async () => {
-        const notification = toast.loading("Withdrawing the commission...");
-
+        const notification = toast.loading("Withdrawing Commission...");
         try {
+            //@ts-ignore
             const data = await WithdrawCommission([{}]);
-
-            toast.success("Commission has been withdrawn successfully!", {
+            toast.success("Your commission has been withdrawn successfully!", {
                 id: notification,
             });
-
             console.info("Contract call success", data);
-        }
-        catch (err) {
+        } catch (err) {
             toast.error("Whoops, something went wrong!", {
                 id: notification,
             });
-
-            console.error("Contract call failed", err);
+            console.error("Contract call error", err);
         }
-    }
+    };
 
 
     const onRestartDraw = async () => {
         const notification = toast.loading("Restarting the draw...");
 
         try {
+            //@ts-ignore
             const data = await restartDraw([{}]);
 
             toast.success("Draw restarted successfully!", {
@@ -90,6 +88,7 @@ function AdminControls() {
         const notification = toast.loading("Refunding all...");
 
         try {
+            //@ts-ignore
             const data = await RefundAll([{}]);
 
             toast.success("All refunded successfully!", {
@@ -106,9 +105,6 @@ function AdminControls() {
             console.error("Contract call failed", err);
         }
     };
-
-
-
 
     return (
         <div className='text-white text-center stats-container rounded-md border-emerald-300/20 border'>
