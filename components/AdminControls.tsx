@@ -106,9 +106,6 @@ function AdminControls() {
         }
     };
 
-
-
-
     return (
         <div className='text-white text-center stats-container rounded-md border-emerald-300/20 border'>
             <h2 className='font-bold font-poppins'>Admin Controls</h2>
